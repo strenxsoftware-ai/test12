@@ -1,0 +1,88 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-model",
+      "description": "Premium kurti set on elegant model in a minimalist luxury interior",
+      "imageUrl": "/hero_banner.png",
+      "imageHint": "elegant woman kurti"
+    },
+    {
+      "id": "category-kurti-sets",
+      "description": "Collection of Kurti Sets",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryi-mee/f518d7ee36816cdbb2a0623d4809f91d97ab6838/wmremove-transformed%20(1).png",
+      "imageHint": "fashion dress"
+    },
+    {
+      "id": "category-kurtis",
+      "description": "Modern Kurtis for women",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryi-mee/f518d7ee36816cdbb2a0623d4809f91d97ab6838/wmremove-transformed.png",
+      "imageHint": "minimalist clothing"
+    },
+    {
+      "id": "category-coord-sets",
+      "description": "Trendy Co-ord Sets",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryi-mee/f518d7ee36816cdbb2a0623d4809f91d97ab6838/_storage_emulated_0_DCIM_Screenshots_IMG_20260424_091322.jpg",
+      "imageHint": "modern apparel"
+    },
+    {
+      "id": "product-1",
+      "description": "Silk Kurti Set",
+      "imageUrl": "https://picsum.photos/seed/p1/600/800",
+      "imageHint": "premium clothing"
+    },
+    {
+      "id": "product-2",
+      "description": "Cotton Co-ord Set",
+      "imageUrl": "https://picsum.photos/seed/p2/600/800",
+      "imageHint": "minimal fashion"
+    },
+    {
+      "id": "product-3",
+      "description": "Evening Kurti",
+      "imageUrl": "https://picsum.photos/seed/p3/600/800",
+      "imageHint": "luxury dress"
+    },
+    {
+      "id": "product-4",
+      "description": "Casual Day Set",
+      "imageUrl": "https://picsum.photos/seed/p4/600/800",
+      "imageHint": "linen clothing"
+    },
+    {
+      "id": "about-craft",
+      "description": "Close up of luxury fabric and stitching",
+      "imageUrl": "https://picsum.photos/seed/craft/800/1000",
+      "imageHint": "fabric detail"
+    },
+    {
+      "id": "insta-1",
+      "description": "Lifestyle fashion shot",
+      "imageUrl": "https://picsum.photos/seed/i1/400/400",
+      "imageHint": "aesthetic lifestyle"
+    },
+    {
+      "id": "insta-2",
+      "description": "Fashion detail shot",
+      "imageUrl": "https://picsum.photos/seed/i2/400/400",
+      "imageHint": "fabric detail"
+    },
+    {
+      "id": "insta-3",
+      "description": "Minimalist interior fashion",
+      "imageUrl": "https://picsum.photos/seed/i3/400/400",
+      "imageHint": "luxury interior"
+    },
+    {
+      "id": "insta-4",
+      "description": "Fashion model portrait",
+      "imageUrl": "https://picsum.photos/seed/i4/400/400",
+      "imageHint": "portrait fashion"
+    },
+    {
+      "id": "size-guide",
+      "description": "Viloryi Detailed Size Chart",
+      "imageUrl": "/size_chart.png",
+      "imageHint": "size chart"
+    }
+  ]
+}

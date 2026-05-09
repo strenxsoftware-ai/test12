@@ -1,0 +1,121 @@
+
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "type": "object",
+      "description": "A fashion item in the Viloryi catalog.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique product identifier." },
+        "name": { "type": "string", "description": "Display name of the product." },
+        "price": { "type": "number", "description": "Legacy price field (deprecated in favor of originalPrice)." },
+        "originalPrice": { "type": "number", "description": "The base price of the item before any discounts." },
+        "discountPrice": { "type": "number", "description": "The final selling price after discount. If null, originalPrice is used." },
+        "category": { 
+          "type": "string",
+          "description": "The ID of the category this product belongs to." 
+        },
+        "images": { 
+          "type": "array",
+          "items": { "type": "string", "format": "uri" },
+          "description": "Array of image URLs."
+        },
+        "description": { "type": "string", "description": "Marketing description." },
+        "materials": { "type": "string", "description": "Fabric composition." },
+        "details": { "type": "string", "description": "Styling details." },
+        "sizes": { 
+          "type": "array",
+          "items": { "type": "string", "enum": ["XS", "S", "M", "L", "XL", "XXL"] },
+          "description": "Available sizes."
+        },
+        "stock": { "type": "number", "description": "Inventory count." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "isFeatured": { "type": "boolean" }
+      },
+      "required": ["id", "name", "originalPrice", "category", "images", "description"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "mobile": { "type": "string" },
+        "altMobile": { "type": "string" },
+        "altName": { "type": "string" },
+        "lastLogin": { "type": "string", "format": "date-time" },
+        "preferences": {
+          "type": "object",
+          "properties": {
+            "gender": { "type": "string", "enum": ["female"] },
+            "dob": { "type": "string", "format": "date" },
+            "topwearType": { "type": "string" },
+            "bottomwearType": { "type": "string" },
+            "bottomwearOccasion": { "type": "string" },
+            "bottomwearFit": { "type": "string" },
+            "bottomwearSize": { "type": "string" },
+            "height": { "type": "string" },
+            "weight": { "type": "string" },
+            "bustSize": { "type": "string" },
+            "shape": { "type": "string" },
+            "size": { "type": "string" },
+            "braSize": {
+              "type": "object",
+              "properties": {
+                "band": { "type": "string" },
+                "cup": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Address": {
+      "title": "Address",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "mobile": { "type": "string" },
+        "pincode": { "type": "string" },
+        "state": { "type": "string" },
+        "city": { "type": "string" },
+        "houseNo": { "type": "string" },
+        "building": { "type": "string" },
+        "locality": { "type": "string" },
+        "type": { "type": "string", "enum": ["home", "office"] },
+        "isDefault": { "type": "boolean" },
+        "officeHours": {
+          "type": "object",
+          "properties": {
+            "openSaturday": { "type": "boolean" },
+            "openSunday": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/backend/entities/Product" },
+      "description": "Public product catalog."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/backend/entities/UserProfile" },
+      "description": "Private user profiles and preferences."
+    },
+    "/users/{userId}/addresses/{addressId}": {
+      "schema": { "$ref": "#/backend/entities/Address" },
+      "description": "User's saved shipping addresses."
+    },
+    "/users/{userId}/wishlist/{productId}": {
+      "schema": { "$ref": "#/backend/entities/Product" },
+      "description": "User's private wishlist of saved products."
+    }
+  }
+}

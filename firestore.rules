@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * VILORYI E-COMMERCE SECURITY RULES
+     * 
+     * Philosophy:
+     * Strict user-ownership model. Users own their data under /users/{userId}.
+     * Public read access for catalog items (products, categories).
+     */
+
+    // --- Helper Functions ---
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incomingData() {
+      return request.resource.data;
+    }
+
+    // --- Public Collections ---
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /customer_reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    // --- User-Scoped Data (Authenticated) ---
+
+    match /users/{userId} {
+      // Allow the user to manage their own profile document
+      allow get, list, create, update: if isOwner(userId);
+      allow delete: if false;
+
+      /**
+       * Recursive match for all subcollections under a user's document.
+       * This covers wishlist, carts, orders, ai_suggestions, etc.
+       */
+      match /{allSubcollections=**} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // --- Guest/Session Data (Handled via UID/SessionID) ---
+
+    match /guest_carts/{sessionId} {
+      allow get, create, update, delete: if isOwner(sessionId);
+      
+      match /{allSubcollections=**} {
+        allow read, write: if isOwner(sessionId);
+      }
+    }
+
+    match /guest_orders/{orderId} {
+      allow get, create: if isSignedIn();
+      allow update, delete: if false;
+    }
+  }
+}
