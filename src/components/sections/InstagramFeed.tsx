@@ -11,8 +11,8 @@ const instaImages = [
   PlaceHolderImages.find(img => img.id === "insta-2")?.imageUrl,
   PlaceHolderImages.find(img => img.id === "insta-3")?.imageUrl,
   PlaceHolderImages.find(img => img.id === "insta-4")?.imageUrl,
-  PlaceHolderImages.find(img => img.id === "hero-model")?.imageUrl,
-  PlaceHolderImages.find(img => img.id === "category-kurti-sets")?.imageUrl,
+  PlaceHolderImages.find(img => img.id === "insta-5")?.imageUrl,
+  PlaceHolderImages.find(img => img.id === "insta-6")?.imageUrl,
 ].filter(Boolean) as string[];
 
 export const InstagramFeed = () => {
