@@ -8,9 +8,8 @@ import { useShop, getEffectivePrice } from "@/context/ShopContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { ChevronLeft, ShoppingBag, CreditCard, Truck, CheckCircle2, MapPin, Pencil } from "lucide-react";
+import { ChevronLeft, ShoppingBag, CreditCard, Truck, MapPin, Pencil, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -32,7 +31,7 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState("upi");
+  const paymentMethod = "upi"; // Forced to online payment
 
   const userRef = useMemoFirebase(() => {
     if (!db || !user?.uid) return null;
@@ -147,19 +146,7 @@ export default function CheckoutPage() {
     }
 
     setLoading(true);
-
-    if (paymentMethod === "upi") {
-      await handleRazorpayPayment();
-    } else {
-      // Cash on Delivery
-      try {
-        await saveOrderToFirestore();
-      } catch (err) {
-        console.error("Order creation error:", err);
-        toast({ variant: "destructive", title: "Order Failed", description: "Could not place your order. Please try again." });
-        setLoading(false);
-      }
-    }
+    await handleRazorpayPayment();
   };
 
   if (cart.length === 0) {
@@ -252,38 +239,41 @@ export default function CheckoutPage() {
                       </Link>
                     </div>
                   ) : (
-                    <RadioGroup value={selectedAddressId || ""} onValueChange={setSelectedAddressId} className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 gap-4">
                       {addresses.map((addr: any) => (
-                        <div key={addr.id}>
-                          <input type="radio" value={addr.id} id={`addr-${addr.id}`} className="peer hidden" />
-                          <Label
-                            htmlFor={`addr-${addr.id}`}
-                            className={cn(
-                              "flex items-start justify-between p-6 border cursor-pointer transition-all",
-                              selectedAddressId === addr.id ? "border-accent bg-accent/5" : "border-muted hover:border-accent/50"
-                            )}
-                          >
-                            <div className="flex items-start gap-4">
-                              <RadioGroupItem value={addr.id} id={`addr-${addr.id}`} className="mt-1" />
-                              <div className="space-y-1">
-                                <div className="text-sm font-bold uppercase flex items-center gap-2">
-                                  <span>{addr.name}</span>
-                                  <Badge className="text-[8px] bg-muted text-primary hover:bg-muted rounded-none">{addr.type}</Badge>
-                                </div>
-                                <p className="text-xs text-muted-foreground font-light leading-relaxed">
-                                  {addr.houseNo}, {addr.building}, {addr.locality}<br />
-                                  {addr.city}, {addr.state} - {addr.pincode}
-                                </p>
-                                <p className="text-xs font-medium pt-1">{addr.mobile}</p>
-                              </div>
+                        <div 
+                          key={addr.id}
+                          onClick={() => setSelectedAddressId(addr.id)}
+                          className={cn(
+                            "flex items-start justify-between p-6 border cursor-pointer transition-all",
+                            selectedAddressId === addr.id ? "border-accent bg-accent/5" : "border-muted hover:border-accent/50"
+                          )}
+                        >
+                          <div className="flex items-start gap-4">
+                            <div className={cn(
+                              "w-4 h-4 rounded-full border flex items-center justify-center mt-1",
+                              selectedAddressId === addr.id ? "border-accent" : "border-muted"
+                            )}>
+                              {selectedAddressId === addr.id && <div className="w-2 h-2 rounded-full bg-accent" />}
                             </div>
-                            <Link href={`/profile/address/manage?id=${addr.id}`} onClick={(e) => e.stopPropagation()}>
-                              <Pencil className="w-4 h-4 text-muted-foreground hover:text-accent" />
-                            </Link>
-                          </Label>
+                            <div className="space-y-1">
+                              <div className="text-sm font-bold uppercase flex items-center gap-2">
+                                <span>{addr.name}</span>
+                                <Badge className="text-[8px] bg-muted text-primary hover:bg-muted rounded-none">{addr.type}</Badge>
+                              </div>
+                              <p className="text-xs text-muted-foreground font-light leading-relaxed">
+                                {addr.houseNo}, {addr.building}, {addr.locality}<br />
+                                {addr.city}, {addr.state} - {addr.pincode}
+                              </p>
+                              <p className="text-xs font-medium pt-1">{addr.mobile}</p>
+                            </div>
+                          </div>
+                          <Link href={`/profile/address/manage?id=${addr.id}`} onClick={(e) => e.stopPropagation()}>
+                            <Pencil className="w-4 h-4 text-muted-foreground hover:text-accent" />
+                          </Link>
                         </div>
                       ))}
-                    </RadioGroup>
+                    </div>
                   )}
                 </div>
 
@@ -293,39 +283,26 @@ export default function CheckoutPage() {
                     <span className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">3</span>
                     <h2 className="text-xl font-headline font-bold uppercase tracking-widest">Payment Method</h2>
                   </div>
-                  <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Label
-                      htmlFor="upi"
-                      className={cn(
-                        "flex items-center justify-between p-4 border cursor-pointer transition-all",
-                        paymentMethod === 'upi' ? "border-accent bg-accent/5" : "hover:border-accent"
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="upi" id="upi" />
-                        <span className="text-xs font-bold tracking-widest uppercase">UPI / Online Pay</span>
+                  <div className="p-6 border border-accent bg-accent/5 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <CreditCard className="w-6 h-6 text-accent" />
+                      <div>
+                        <h4 className="text-sm font-bold uppercase tracking-widest">Online Payment</h4>
+                        <p className="text-[10px] text-muted-foreground uppercase font-medium">UPI, Credit/Debit Cards, Netbanking</p>
                       </div>
-                    </Label>
-                    <Label
-                      htmlFor="cod"
-                      className={cn(
-                        "flex items-center justify-between p-4 border cursor-pointer transition-all",
-                        paymentMethod === 'cod' ? "border-accent bg-accent/5" : "hover:border-accent"
-                      )}
-                    >
-                      <div className="flex items-center gap-3">
-                        <RadioGroupItem value="cod" id="cod" />
-                        <span className="text-xs font-bold tracking-widest uppercase">Cash on Delivery</span>
-                      </div>
-                    </Label>
-                  </RadioGroup>
+                    </div>
+                    <div className="flex items-center gap-2">
+                       <ShieldCheck className="w-4 h-4 text-green-600" />
+                       <span className="text-[10px] font-bold text-green-600 uppercase">Secure</span>
+                    </div>
+                  </div>
                 </div>
 
                 <Button 
                   disabled={loading || !selectedAddressId}
                   className="w-full bg-primary text-white py-8 tracking-[0.3em] font-bold uppercase rounded-none hover:bg-foreground/90 transition-all text-sm"
                 >
-                  {loading ? "PROCESSING..." : `PLACE ORDER • ₹${cartTotal.toLocaleString()}`}
+                  {loading ? "PROCESSING..." : `PAY SECURELY • ₹${cartTotal.toLocaleString()}`}
                 </Button>
               </form>
             </div>
