@@ -5,8 +5,8 @@ import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function AboutPage() {
-  const storyImg = PlaceHolderImages.find(img => img.id === "about-craft");
-  const missionImg = PlaceHolderImages.find(img => img.id === "insta-3");
+  const storyImg = PlaceHolderImages.find(img => img.id === "about-story");
+  const missionImg = PlaceHolderImages.find(img => img.id === "about-mission");
   const heroImg = PlaceHolderImages.find(img => img.id === "hero-model");
 
   return (
@@ -35,10 +35,10 @@ export default function AboutPage() {
               {storyImg?.imageUrl && (
                 <Image
                   src={storyImg.imageUrl}
-                  alt="Viloryi Craftsmanship"
+                  alt="Viloryi Our Story"
                   fill
                   className="object-cover"
-                  data-ai-hint="fabric detail"
+                  data-ai-hint="luxury fashion"
                 />
               )}
             </div>
@@ -73,10 +73,10 @@ export default function AboutPage() {
               {missionImg?.imageUrl && (
                 <Image
                   src={missionImg.imageUrl}
-                  alt="Viloryi Mission"
+                  alt="Viloryi Our Mission"
                   fill
                   className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                  data-ai-hint="luxury interior"
+                  data-ai-hint="modern apparel"
                 />
               )}
             </div>
