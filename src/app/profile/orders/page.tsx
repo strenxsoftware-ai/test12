@@ -116,7 +116,7 @@ export default function OrdersPage() {
                         <div className="flex flex-wrap items-center gap-6">
                           <div className="space-y-1">
                             <p className="text-[10px] tracking-widest font-bold uppercase opacity-50">Order Number</p>
-                            <p className="text-sm font-bold">#{order.id.slice(-8).toUpperCase()}</p>
+                            <p className="text-sm font-bold">#VL-{order.orderNumber || order.id.slice(-3).toUpperCase()}</p>
                           </div>
                           <div className="space-y-1">
                             <p className="text-[10px] tracking-widest font-bold uppercase opacity-50">Date Placed</p>
