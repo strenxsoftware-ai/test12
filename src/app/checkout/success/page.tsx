@@ -49,16 +49,23 @@ export default function CheckoutSuccessPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Link href="/" className="flex-1">
-              <Button variant="outline" className="w-full rounded-none tracking-widest py-7 h-auto font-bold uppercase text-xs">
+            <Button 
+              asChild
+              variant="outline" 
+              className="flex-1 rounded-none tracking-widest py-7 h-auto font-bold uppercase text-xs"
+            >
+              <Link href="/">
                 Back to Home
-              </Button>
-            </Link>
-            <Link href="/#collections" className="flex-1">
-              <Button className="w-full bg-primary text-white rounded-none tracking-widest py-7 h-auto font-bold uppercase text-xs">
+              </Link>
+            </Button>
+            <Button 
+              asChild
+              className="flex-1 bg-primary text-white rounded-none tracking-widest py-7 h-auto font-bold uppercase text-xs"
+            >
+              <Link href="/#collections">
                 Continue Shopping <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
