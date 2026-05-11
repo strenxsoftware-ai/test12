@@ -50,10 +50,16 @@
       "imageHint": "linen clothing"
     },
     {
-      "id": "about-craft",
-      "description": "Close up of luxury fabric and stitching",
-      "imageUrl": "https://picsum.photos/seed/craft/800/1000",
-      "imageHint": "fabric detail"
+      "id": "about-story",
+      "description": "Viloryi Brand Story Image",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/eaf9eb694f4046ec7567317ef5cac5f566789170/our_story.png",
+      "imageHint": "fashion heritage"
+    },
+    {
+      "id": "about-mission",
+      "description": "Viloryi Mission Image",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/eaf9eb694f4046ec7567317ef5cac5f566789170/our_mission.png",
+      "imageHint": "luxury fashion"
     },
     {
       "id": "insta-1",
