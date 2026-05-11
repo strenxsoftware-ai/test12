@@ -37,6 +37,7 @@ import { useUser, useFirestore, useDoc, useMemoFirebase, errorEmitter, Firestore
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
 import { LoginDialog } from "@/components/auth/LoginDialog";
 import { Badge } from "@/components/ui/badge";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export const ProductDetails = ({ productId }: { productId: string }) => {
   const { products, addToCart } = useShop();
@@ -48,9 +49,13 @@ export const ProductDetails = ({ productId }: { productId: string }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [activeImage, setActiveImage] = useState<string>(product?.images?.[0] || "");
   const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [viewerZoom, setViewerZoom] = useState(1);
+  const [isSizeGuideZoomed, setIsSizeGuideZoomed] = useState(false);
   
+  const sizeGuideImg = PlaceHolderImages.find(img => img.id === "size-guide");
+
   // Refs for navigation and panning
   const viewerRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<number | null>(null);
@@ -303,7 +308,12 @@ export const ProductDetails = ({ productId }: { productId: string }) => {
           <div className="space-y-6">
             <div className="flex justify-between items-center text-xs tracking-widest font-bold uppercase">
               <span>Select Size</span>
-              <span className="opacity-40">Size Guide (In Footer)</span>
+              <button 
+                onClick={() => setIsSizeGuideOpen(true)}
+                className="text-accent hover:text-primary transition-colors border-b border-accent/20 pb-0.5"
+              >
+                Size Guide
+              </button>
             </div>
             
             <div className="flex flex-wrap gap-3">
@@ -472,6 +482,40 @@ export const ProductDetails = ({ productId }: { productId: string }) => {
           {/* Image Counter */}
           <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/40 text-[10px] tracking-[0.4em] font-bold uppercase pointer-events-none">
             {activeIndex + 1} / {allImages.length}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Size Guide Dialog */}
+      <Dialog open={isSizeGuideOpen} onOpenChange={(open) => {
+        setIsSizeGuideOpen(open);
+        if (!open) setIsSizeGuideZoomed(false);
+      }}>
+        <DialogContent className="max-w-2xl bg-background rounded-none border-none p-0 overflow-hidden">
+          <DialogHeader className="p-6 border-b">
+            <DialogTitle className="text-2xl font-headline tracking-widest uppercase text-primary">Size Guide</DialogTitle>
+          </DialogHeader>
+          <div className="p-0 overflow-auto max-h-[70vh] custom-scrollbar">
+            <div className="relative w-full bg-muted flex items-center justify-center min-h-[400px]">
+              {sizeGuideImg && (
+                <Image
+                  src={sizeGuideImg.imageUrl}
+                  alt="Viloryi Size Guide"
+                  width={800}
+                  height={1200}
+                  data-ai-hint={sizeGuideImg.imageHint}
+                  className={cn(
+                    "w-full h-auto transition-all duration-500 origin-center cursor-zoom-in",
+                    isSizeGuideZoomed ? "scale-125 cursor-zoom-out" : "scale-100"
+                  )}
+                  onClick={() => setIsSizeGuideZoomed(!isSizeGuideZoomed)}
+                />
+              )}
+            </div>
+            <div className="p-4 bg-background/80 backdrop-blur-sm sticky bottom-0 flex items-center justify-center gap-2 text-muted-foreground text-[10px] tracking-widest uppercase font-bold border-t">
+              <Maximize2 className="w-3 h-3" />
+              <span>Click image to {isSizeGuideZoomed ? 'zoom out' : 'zoom in'}</span>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
