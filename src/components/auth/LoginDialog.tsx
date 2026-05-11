@@ -14,9 +14,7 @@ import { Label } from '@/components/ui/label';
 import { LogIn, Star, Loader2, UserPlus, Phone, Lock, User } from 'lucide-react';
 import { useAuth, useFirestore } from '@/firebase';
 import { loginWithMobile, signUpWithMobile } from '@/firebase/auth/mobile-password-auth';
-import { signInWithGoogle } from '@/firebase/auth/google-auth';
 import { toast } from '@/hooks/use-toast';
-import { Separator } from '@/components/ui/separator';
 
 interface LoginDialogProps {
   isOpen: boolean;
@@ -35,53 +33,12 @@ export const LoginDialog = ({
   const db = useFirestore();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isLoggingInGoogle, setIsLoggingInGoogle] = useState(false);
   
   const [formData, setFormData] = useState({
     mobile: "",
     password: "",
     name: ""
   });
-
-  const handleGoogleLogin = async () => {
-    if (!auth || !db) {
-      toast({
-        variant: "destructive",
-        title: "Initialization Error",
-        description: "Firebase services are still loading. Please try again in a moment.",
-      });
-      return;
-    }
-
-    setIsLoggingInGoogle(true);
-    try {
-      await signInWithGoogle(auth, db);
-      toast({
-        title: "Welcome to Viloryi",
-        description: "You have successfully signed in.",
-      });
-      onOpenChange(false);
-    } catch (error: any) {
-      console.error("Google Sign-In Error:", error);
-      
-      let errorMessage = "An unexpected error occurred during sign-in.";
-      if (error.code === 'auth/popup-blocked') {
-        errorMessage = "The sign-in popup was blocked by your browser. Please allow popups for this site.";
-      } else if (error.code === 'auth/popup-closed-by-user') {
-        errorMessage = "The sign-in window was closed before completion.";
-      } else if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "Google sign-in is not enabled in the Firebase Console.";
-      }
-
-      toast({
-        variant: "destructive",
-        title: "Sign-In Failed",
-        description: errorMessage,
-      });
-    } finally {
-      setIsLoggingInGoogle(false);
-    }
-  };
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,25 +105,6 @@ export const LoginDialog = ({
               {isSignUp ? "Join our community of elegant women." : "Access your saved pieces and orders."}
             </DialogDescription>
           </DialogHeader>
-
-          <Button 
-            onClick={handleGoogleLogin}
-            disabled={isLoggingInGoogle}
-            className="w-full bg-white text-primary border border-muted py-7 rounded-none tracking-[0.2em] font-bold text-xs hover:bg-muted/30 transition-all flex items-center justify-center gap-3"
-          >
-            {isLoggingInGoogle ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <LogIn className="w-4 h-4" />
-            )}
-            {isLoggingInGoogle ? "SIGNING IN..." : "SIGN IN WITH GOOGLE"}
-          </Button>
-
-          <div className="flex items-center gap-4 py-2">
-            <Separator className="flex-1" />
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">OR</span>
-            <Separator className="flex-1" />
-          </div>
 
           <form onSubmit={handleAuth} className="space-y-4">
             {isSignUp && (
