@@ -15,7 +15,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore, useDoc, useCollection, useMemoFirebase } from "@/firebase";
-import { doc, collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { doc, collection, addDoc, serverTimestamp, getDocs, query } from "firebase/firestore";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +69,12 @@ export default function CheckoutPage() {
   const saveOrderToFirestore = async (paymentId?: string) => {
     if (!user || !db || !selectedAddress) return;
 
+    // Get sequential order number
+    const ordersRef = collection(db, "users", user.uid, "orders");
+    const ordersSnapshot = await getDocs(query(ordersRef));
+    const nextOrderNum = ordersSnapshot.size + 1;
+    const formattedOrderNumber = nextOrderNum.toString().padStart(3, '0');
+
     // Use discountPrice logic for items in the saved order
     const orderItems = cart.map(item => ({
       ...item,
@@ -77,6 +83,7 @@ export default function CheckoutPage() {
 
     const orderData = {
       userId: user.uid,
+      orderNumber: formattedOrderNumber,
       items: orderItems,
       totalAmount: cartTotal,
       status: "Processing",
@@ -89,9 +96,8 @@ export default function CheckoutPage() {
       itemsCount: cart.length
     };
 
-    const ordersRef = collection(db, "users", user.uid, "orders");
     await addDoc(ordersRef, orderData);
-    router.push("/checkout/success");
+    router.push(`/checkout/success?num=${formattedOrderNumber}`);
   };
 
   const handleRazorpayPayment = async () => {
