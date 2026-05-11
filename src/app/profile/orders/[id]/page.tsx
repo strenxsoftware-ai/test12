@@ -90,7 +90,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                 <ChevronLeft className="w-3 h-3" /> Back to Orders
               </Link>
               <h1 className="text-4xl md:text-5xl font-headline font-bold text-primary">Order Details</h1>
-              <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] font-bold">#{order.id.toUpperCase()}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-[0.2em] font-bold">
+                #VL-{order.orderNumber || order.id.slice(-3).toUpperCase()}
+              </p>
             </div>
             <div>
               <Badge variant="outline" className="rounded-none border-muted px-6 py-2.5 flex gap-3 items-center bg-white shadow-sm">
