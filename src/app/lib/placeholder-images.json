@@ -57,27 +57,39 @@
     },
     {
       "id": "insta-1",
-      "description": "Lifestyle fashion shot",
+      "description": "Bloom Patch Flare Tunic",
       "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Bloom_Patch_Flare_Tunic.png",
-      "imageHint": "aesthetic lifestyle"
+      "imageHint": "fashion tunic"
     },
     {
       "id": "insta-2",
-      "description": "Fashion detail shot",
-      "imageUrl": "https://picsum.photos/seed/i2/400/400",
-      "imageHint": "fabric detail"
+      "description": "Indigo Breeze Cami Top",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Indigo_Breeze_Cami_Top.png",
+      "imageHint": "cami top"
     },
     {
       "id": "insta-3",
-      "description": "Minimalist interior fashion",
-      "imageUrl": "https://picsum.photos/seed/i3/400/400",
-      "imageHint": "luxury interior"
+      "description": "Lavender Bloom Elegance Dress",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Lavender_Bloom_Elegance_Dress.png",
+      "imageHint": "lavender dress"
     },
     {
       "id": "insta-4",
-      "description": "Fashion model portrait",
-      "imageUrl": "https://picsum.photos/seed/i4/400/400",
-      "imageHint": "portrait fashion"
+      "description": "Lilac Bloom Peplum Top",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Lilac_Bloom_Peplum_Top.png",
+      "imageHint": "peplum top"
+    },
+    {
+      "id": "insta-5",
+      "description": "Mocha Paisley Top",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Mocha_Paisley_Top.png",
+      "imageHint": "paisley pattern"
+    },
+    {
+      "id": "insta-6",
+      "description": "Mint Meadow Flared Tunic Top",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Mint_Meadow_Flared_Tunic_Top.png",
+      "imageHint": "mint tunic"
     },
     {
       "id": "size-guide",
