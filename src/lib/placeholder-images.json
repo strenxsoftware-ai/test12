@@ -69,15 +69,23 @@
     {
       "id": "insta-3",
       "description": "Minimalist interior fashion",
-      "imageUrl": "https://picsum.photos/seed/i3/400/400",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Lavender_Bloom_Elegance_Dress.png",
       "imageHint": "luxury interior"
     },
     {
       "id": "insta-4",
       "description": "Fashion model portrait",
-      "imageUrl": "https://picsum.photos/seed/i4/400/400",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Lilac_Bloom_Peplum_Top.png
+",
       "imageHint": "portrait fashion"
     },
+  {
+      "id": "insta-4",
+      "description": "Fashion model portrait",
+      "imageUrl": "https://raw.githubusercontent.com/strenxsoftware-ai/viloryimee/cfdbd2530040dfcf33d4f96edc5508d1c1d54726/Mocha_Paisley_Top.png,
+      "imageHint": "portrait fashion"
+    },
+    
     {
       "id": "size-guide",
       "description": "Viloryi Detailed Size Chart",
