@@ -6,10 +6,68 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export default function ContactPage() {
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Viloryi",
+    "image": "https://viloryi.com/hero_banner.png",
+    "@id": "https://viloryi.com",
+    "url": "https://viloryi.com",
+    "telephone": "+91-9696731313",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Delhi",
+      "addressLocality": "Delhi",
+      "addressRegion": "Delhi",
+      "postalCode": "110001",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 28.6139,
+      "longitude": 77.2090
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ],
+      "opens": "10:00",
+      "closes": "19:00"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://viloryi.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Contact",
+        "item": "https://viloryi.com/contact"
+      }
+    ]
+  };
+
   return (
     <main className="min-h-screen bg-background">
+      <JsonLd data={localBusinessSchema} />
+      <JsonLd data={breadcrumbSchema} />
       <Navbar />
       
       {/* Hero Section */}
