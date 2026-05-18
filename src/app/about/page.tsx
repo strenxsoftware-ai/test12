@@ -3,14 +3,34 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export default function AboutPage() {
   const storyImg = PlaceHolderImages.find(img => img.id === "about-story");
   const missionImg = PlaceHolderImages.find(img => img.id === "about-mission");
-  const heroImg = PlaceHolderImages.find(img => img.id === "hero-model");
+  
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://viloryi.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "About Us",
+        "item": "https://viloryi.com/about"
+      }
+    ]
+  };
 
   return (
     <main className="min-h-screen bg-background">
+      <JsonLd data={breadcrumbSchema} />
       <Navbar />
       
       {/* Hero Section */}
