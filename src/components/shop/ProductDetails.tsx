@@ -385,7 +385,7 @@ export const ProductDetails = ({ productId }: { productId: string }) => {
                 <AccordionContent className="text-xs text-muted-foreground leading-relaxed space-y-3 pt-2">
                   <div className="flex items-center gap-3">
                     <Truck className="w-4 h-4 text-accent" />
-                    <span>Free standard shipping on orders above ₹2,999.</span>
+                    <span>Free standard shipping on orders above ₹2,000.</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <RotateCcw className="w-4 h-4 text-accent" />
