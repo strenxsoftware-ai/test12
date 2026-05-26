@@ -10,7 +10,7 @@ import { SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import Link from "next/link";
 
 export const CartDrawer = () => {
-  const { cart, removeFromCart, updateQuantity, cartTotal, setIsCartOpen } = useShop();
+  const { cart, removeFromCart, updateQuantity, cartTotal, shippingFee, grandTotal, setIsCartOpen } = useShop();
 
   if (cart.length === 0) {
     return (
@@ -90,11 +90,23 @@ export const CartDrawer = () => {
         })}
       </div>
       <div className="p-6 bg-muted/30 border-t space-y-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm tracking-widest font-medium">SUBTOTAL</span>
-          <span className="text-lg font-bold">₹{cartTotal.toLocaleString()}</span>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center text-xs text-muted-foreground">
+            <span className="tracking-widest uppercase font-medium">SUBTOTAL</span>
+            <span className="font-semibold">₹{cartTotal.toLocaleString()}</span>
+          </div>
+          <div className="flex justify-between items-center text-xs text-muted-foreground">
+            <span className="tracking-widest uppercase font-medium">SHIPPING</span>
+            <span className="font-semibold">{shippingFee === 0 ? "FREE" : `₹${shippingFee}`}</span>
+          </div>
+          <div className="flex justify-between items-center pt-2">
+            <span className="text-sm tracking-widest font-bold">TOTAL</span>
+            <span className="text-lg font-bold">₹{grandTotal.toLocaleString()}</span>
+          </div>
         </div>
-        <p className="text-xs text-muted-foreground text-center">Taxes and shipping calculated at checkout.</p>
+        <p className="text-[10px] text-muted-foreground text-center uppercase tracking-wider">
+          {shippingFee === 0 ? "Your order qualifies for free delivery" : `Add ₹${(2000 - cartTotal).toLocaleString()} more for free shipping`}
+        </p>
         <Link href="/checkout" className="w-full" onClick={() => setIsCartOpen(false)}>
           <Button className="w-full bg-primary text-primary-foreground py-6 tracking-[0.2em] rounded-none hover:bg-foreground/90 transition-all font-semibold">
             PROCEED TO CHECKOUT
