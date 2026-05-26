@@ -34,7 +34,9 @@ type ShopContextType = {
   clearCart: () => void;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  cartTotal: number;
+  cartTotal: number; // Subtotal of items
+  shippingFee: number;
+  grandTotal: number;
 };
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -116,6 +118,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return total + effectivePrice * item.quantity;
   }, 0);
 
+  const shippingFee = cartTotal > 0 && cartTotal < 2000 ? 90 : 0;
+  const grandTotal = cartTotal + shippingFee;
+
   return (
     <ShopContext.Provider
       value={{
@@ -129,6 +134,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isCartOpen,
         setIsCartOpen,
         cartTotal,
+        shippingFee,
+        grandTotal,
       }}
     >
       {children}
