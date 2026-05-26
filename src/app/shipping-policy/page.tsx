@@ -1,3 +1,4 @@
+
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Truck, Clock, ShieldCheck, Globe, Package, MapPin } from "lucide-react";
@@ -78,7 +79,7 @@ export default function ShippingPolicyPage() {
                     <strong>Standard Delivery:</strong> All orders are typically delivered within 3-5 business days across major cities. Delivery to remote locations may take 5-7 business days.
                   </p>
                   <p>
-                    <strong>Shipping Charges:</strong> We offer FREE standard shipping on all orders above ₹2,999. For orders below this amount, a flat shipping fee of ₹150 is applicable.
+                    <strong>Shipping Charges:</strong> We offer FREE standard shipping on all orders above ₹2,000. For orders below this amount, a flat shipping fee of ₹90 is applicable.
                   </p>
                 </div>
               </div>
