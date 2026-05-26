@@ -22,7 +22,7 @@ import { createRazorpayOrder } from "@/app/actions/razorpay";
 import Script from "next/script";
 
 export default function CheckoutPage() {
-  const { cart, cartTotal, clearCart } = useShop();
+  const { cart, cartTotal, shippingFee, grandTotal, clearCart } = useShop();
   const { user, isUserLoading } = useUser();
   const db = useFirestore();
   const router = useRouter();
@@ -84,7 +84,9 @@ export default function CheckoutPage() {
       userId: user.uid,
       orderNumber: formattedOrderNumber,
       items: orderItems,
-      totalAmount: cartTotal,
+      subtotal: cartTotal,
+      shippingFee,
+      totalAmount: grandTotal,
       status: "Processing",
       paymentMethod,
       razorpayPaymentId: paymentId || null,
@@ -100,7 +102,7 @@ export default function CheckoutPage() {
   };
 
   const handleRazorpayPayment = async () => {
-    const res = await createRazorpayOrder(cartTotal);
+    const res = await createRazorpayOrder(grandTotal);
     
     if (!res.success || !res.order) {
       toast({ variant: "destructive", title: "Payment Error", description: res.error || "Could not initiate payment." });
@@ -302,7 +304,7 @@ export default function CheckoutPage() {
                   disabled={loading || !selectedAddressId}
                   className="w-full bg-primary text-white py-8 tracking-[0.3em] font-bold uppercase rounded-none hover:bg-foreground/90 transition-all text-sm"
                 >
-                  {loading ? "PROCESSING..." : `PAY SECURELY • ₹${cartTotal.toLocaleString()}`}
+                  {loading ? "PROCESSING..." : `PAY SECURELY • ₹${grandTotal.toLocaleString()}`}
                 </Button>
               </form>
             </div>
@@ -340,12 +342,16 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
-                    <span className="text-accent font-bold">FREE</span>
+                    {shippingFee === 0 ? (
+                      <span className="text-accent font-bold">FREE</span>
+                    ) : (
+                      <span className="font-medium">₹{shippingFee.toLocaleString()}</span>
+                    )}
                   </div>
                   <Separator />
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span>₹{cartTotal.toLocaleString()}</span>
+                    <span>₹{grandTotal.toLocaleString()}</span>
                   </div>
                 </div>
 
