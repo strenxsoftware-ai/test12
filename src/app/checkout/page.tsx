@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { ChevronLeft, ShoppingBag, CreditCard, Truck, MapPin, Pencil, ShieldCheck } from "lucide-react";
+import { ChevronLeft, ShoppingBag, CreditCard, Truck, MapPin, Pencil, ShieldCheck, Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -22,7 +22,7 @@ import { createRazorpayOrder } from "@/app/actions/razorpay";
 import Script from "next/script";
 
 export default function CheckoutPage() {
-  const { cart, cartTotal, shippingFee, grandTotal, clearCart } = useShop();
+  const { cart, cartTotal, shippingFee, grandTotal, clearCart, affiliateId } = useShop();
   const { user, isUserLoading } = useUser();
   const db = useFirestore();
   const router = useRouter();
@@ -31,7 +31,7 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
-  const paymentMethod = "upi"; // Forced to online payment
+  const paymentMethod = "upi"; 
 
   const userRef = useMemoFirebase(() => {
     if (!db || !user?.uid) return null;
@@ -74,7 +74,6 @@ export default function CheckoutPage() {
     const nextOrderNum = ordersSnapshot.size + 1;
     const formattedOrderNumber = nextOrderNum.toString().padStart(3, '0');
 
-    // Use discountPrice logic for items in the saved order
     const orderItems = cart.map(item => ({
       ...item,
       priceAtPurchase: getEffectivePrice(item)
@@ -94,10 +93,25 @@ export default function CheckoutPage() {
       phone,
       shippingAddress: selectedAddress,
       createdAt: serverTimestamp(),
-      itemsCount: cart.length
+      itemsCount: cart.length,
+      affiliateId: affiliateId || null
     };
 
-    await addDoc(ordersRef, orderData);
+    const newOrderRef = await addDoc(ordersRef, orderData);
+
+    // If affiliate sale, reward influencer (12% commission)
+    if (affiliateId) {
+      const commissionsRef = collection(db, "commissions");
+      await addDoc(commissionsRef, {
+        influencerId: affiliateId,
+        orderId: newOrderRef.id,
+        amount: Math.round(grandTotal * 0.12),
+        orderTotal: grandTotal,
+        status: "earned",
+        createdAt: serverTimestamp()
+      });
+    }
+
     router.push(`/checkout/success?num=${formattedOrderNumber}`);
   };
 
@@ -118,7 +132,6 @@ export default function CheckoutPage() {
       description: "Premium Fashion Collection",
       order_id: res.order.id,
       handler: async function (response: any) {
-        // Payment successful
         await saveOrderToFirestore(response.razorpay_payment_id);
       },
       prefill: {
@@ -193,6 +206,12 @@ export default function CheckoutPage() {
                     <span className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">1</span>
                     <h2 className="text-xl font-headline font-bold uppercase tracking-widest">Contact Information</h2>
                   </div>
+                  {affiliateId && (
+                    <div className="p-4 bg-accent/10 border border-accent/20 flex items-center gap-3">
+                      <Star className="w-4 h-4 text-accent" />
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-accent">Referral applied for your purchase</span>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-[10px] tracking-widest font-bold uppercase">Email Address</Label>

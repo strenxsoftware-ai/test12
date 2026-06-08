@@ -1,9 +1,10 @@
 
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { collection, Timestamp } from "firebase/firestore";
+import { useSearchParams } from "next/navigation";
 
 export type Product = {
   id: string;
@@ -37,6 +38,8 @@ type ShopContextType = {
   cartTotal: number; // Subtotal of items
   shippingFee: number;
   grandTotal: number;
+  affiliateId: string | null;
+  setAffiliateId: (id: string | null) => void;
 };
 
 const ShopContext = createContext<ShopContextType | undefined>(undefined);
@@ -58,7 +61,32 @@ export const getDiscountPercentage = (product: Product | any) => {
 export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [affiliateId, setAffiliateIdState] = useState<string | null>(null);
   const db = useFirestore();
+
+  // Helper to set affiliate with persistence
+  const setAffiliateId = useCallback((id: string | null) => {
+    setAffiliateIdState(id);
+    if (id) {
+      localStorage.setItem("viloryi-ref", id);
+    } else {
+      localStorage.removeItem("viloryi-ref");
+    }
+  }, []);
+
+  // Handle Affiliate Detection
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const ref = params.get("ref");
+      if (ref) {
+        setAffiliateId(ref);
+      } else {
+        const savedRef = localStorage.getItem("viloryi-ref");
+        if (savedRef) setAffiliateIdState(savedRef);
+      }
+    }
+  }, [setAffiliateId]);
 
   const productsQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -111,6 +139,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem("viloryi-cart");
+    // Also clear affiliate after purchase is fully attributed
+    localStorage.removeItem("viloryi-ref");
+    setAffiliateIdState(null);
   };
 
   const cartTotal = cart.reduce((total, item) => {
@@ -136,6 +167,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         cartTotal,
         shippingFee,
         grandTotal,
+        affiliateId,
+        setAffiliateId,
       }}
     >
       {children}

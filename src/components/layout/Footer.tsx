@@ -1,9 +1,10 @@
+
 "use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram, Facebook, Twitter, Mail, MapPin, MessageSquare, Maximize2 } from "lucide-react";
+import { Instagram, Facebook, Twitter, Mail, MapPin, MessageSquare, Maximize2, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -40,7 +41,8 @@ export const Footer = () => {
               <li><Link href="/" className="hover:opacity-100 hover:text-accent transition-all">Shop All</Link></li>
               <li><Link href="/#collections" className="hover:opacity-100 hover:text-accent transition-all">Collections</Link></li>
               <li><Link href="/about" className="hover:opacity-100 hover:text-accent transition-all">Our Story</Link></li>
-              <li><Link href="/contact" className="hover:opacity-100 hover:text-accent transition-all">Contact Us</Link></li>
+              <li><Link href="/collaborate" className="hover:opacity-100 hover:text-accent transition-all">Collaborate</Link></li>
+              <li><Link href="/influencer/login" className="hover:opacity-100 hover:text-accent transition-all flex items-center gap-2"><Star className="w-3 h-3" /> Influencer Login</Link></li>
             </ul>
           </div>
           

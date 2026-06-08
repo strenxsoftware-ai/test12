@@ -43,33 +43,36 @@
         "displayName": { "type": "string" },
         "photoURL": { "type": "string" },
         "mobile": { "type": "string" },
-        "altMobile": { "type": "string" },
-        "altName": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "influencer"], "default": "user" },
         "lastLogin": { "type": "string", "format": "date-time" },
-        "preferences": {
-          "type": "object",
-          "properties": {
-            "gender": { "type": "string", "enum": ["female"] },
-            "dob": { "type": "string", "format": "date" },
-            "topwearType": { "type": "string" },
-            "bottomwearType": { "type": "string" },
-            "bottomwearOccasion": { "type": "string" },
-            "bottomwearFit": { "type": "string" },
-            "bottomwearSize": { "type": "string" },
-            "height": { "type": "string" },
-            "weight": { "type": "string" },
-            "bustSize": { "type": "string" },
-            "shape": { "type": "string" },
-            "size": { "type": "string" },
-            "braSize": {
-              "type": "object",
-              "properties": {
-                "band": { "type": "string" },
-                "cup": { "type": "string" }
-              }
-            }
-          }
-        }
+        "affiliateId": { "type": "string", "description": "Unique ID used for referral links." },
+        "referralUsername": { "type": "string", "description": "Branded handle for influencer profile (e.g., prince)" },
+        "referralBio": { "type": "string", "description": "Short bio for the branded landing page" },
+        "referralDisplayName": { "type": "string", "description": "Name shown on the landing page" },
+        "totalEarnings": { "type": "number", "description": "Aggregated brand credits earned." }
+      }
+    },
+    "ReferralLink": {
+      "title": "Referral Link",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "targetName": { "type": "string", "description": "Product or Category name linked to" },
+        "type": { "type": "string", "enum": ["product", "category", "profile"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Commission": {
+      "title": "Affiliate Commission",
+      "type": "object",
+      "properties": {
+        "influencerId": { "type": "string" },
+        "orderId": { "type": "string" },
+        "amount": { "type": "number", "description": "Amount credited to influencer (12% of order total)." },
+        "orderTotal": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "earned"], "default": "earned" },
+        "createdAt": { "type": "string", "format": "date-time" }
       }
     },
     "Address": {
@@ -86,15 +89,27 @@
         "building": { "type": "string" },
         "locality": { "type": "string" },
         "type": { "type": "string", "enum": ["home", "office"] },
-        "isDefault": { "type": "boolean" },
-        "officeHours": {
-          "type": "object",
-          "properties": {
-            "openSaturday": { "type": "boolean" },
-            "openSunday": { "type": "boolean" }
-          }
-        }
+        "isDefault": { "type": "boolean" }
       }
+    },
+    "Collaboration": {
+      "title": "Collaboration Request",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "country": { "type": "string" },
+        "instagram": { "type": "string" },
+        "followers": { "type": "string" },
+        "message": { "type": "string" },
+        "consent": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "default": "pending" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["fullName", "email", "phone", "consent"]
     }
   },
   "auth": {
@@ -109,6 +124,14 @@
       "schema": { "$ref": "#/backend/entities/UserProfile" },
       "description": "Private user profiles and preferences."
     },
+    "/users/{userId}/links/{linkId}": {
+      "schema": { "$ref": "#/backend/entities/ReferralLink" },
+      "description": "Influencer's generated branded links."
+    },
+    "/commissions/{commissionId}": {
+      "schema": { "$ref": "#/backend/entities/Commission" },
+      "description": "Earnings generated via affiliate links."
+    },
     "/users/{userId}/addresses/{addressId}": {
       "schema": { "$ref": "#/backend/entities/Address" },
       "description": "User's saved shipping addresses."
@@ -116,6 +139,10 @@
     "/users/{userId}/wishlist/{productId}": {
       "schema": { "$ref": "#/backend/entities/Product" },
       "description": "User's private wishlist of saved products."
+    },
+    "/collaboration/{collaborationId}": {
+      "schema": { "$ref": "#/backend/entities/Collaboration" },
+      "description": "Influencer collaboration submissions."
     }
   }
 }

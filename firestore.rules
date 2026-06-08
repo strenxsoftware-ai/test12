@@ -1,16 +1,7 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    /**
-     * VILORYI E-COMMERCE SECURITY RULES
-     * 
-     * Philosophy:
-     * Strict user-ownership model. Users own their data under /users/{userId}.
-     * Public read access for catalog items (products, categories).
-     */
-
-    // --- Helper Functions ---
 
     function isSignedIn() {
       return request.auth != null;
@@ -19,12 +10,6 @@ service cloud.firestore {
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
-
-    function incomingData() {
-      return request.resource.data;
-    }
-
-    // --- Public Collections ---
 
     match /products/{productId} {
       allow read: if true;
@@ -36,41 +21,32 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    match /customer_reviews/{reviewId} {
-      allow read: if true;
+    match /commissions/{commId} {
+      // Allow any buyer to create a commission record on successful purchase
       allow create: if isSignedIn();
-      allow update, delete: if false;
+      // Only the influencer can read their own commissions
+      allow read: if isSignedIn() && request.auth.uid == resource.data.influencerId;
     }
 
-    // --- User-Scoped Data (Authenticated) ---
+    match /collaboration/{collabId} {
+      allow create: if true;
+      // Rule-as-filter for influencer dashboard history (if needed)
+      allow read: if isSignedIn() && (resource.data.email == request.auth.token.email);
+      allow update, delete: if false;
+    }
 
     match /users/{userId} {
-      // Allow the user to manage their own profile document
-      allow get, list, create, update: if isOwner(userId);
+      // Allow public read for influencer landing pages and username uniqueness checks
+      allow get, list: if true;
+      
+      // Still restrict writes to the owner
+      allow create, update: if isOwner(userId);
       allow delete: if false;
 
-      /**
-       * Recursive match for all subcollections under a user's document.
-       * This covers wishlist, carts, orders, ai_suggestions, etc.
-       */
       match /{allSubcollections=**} {
+        // Protect private subcollections (addresses, links, wishlist)
         allow read, write: if isOwner(userId);
       }
-    }
-
-    // --- Guest/Session Data (Handled via UID/SessionID) ---
-
-    match /guest_carts/{sessionId} {
-      allow get, create, update, delete: if isOwner(sessionId);
-      
-      match /{allSubcollections=**} {
-        allow read, write: if isOwner(sessionId);
-      }
-    }
-
-    match /guest_orders/{orderId} {
-      allow get, create: if isSignedIn();
-      allow update, delete: if false;
     }
   }
 }
